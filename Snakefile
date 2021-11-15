@@ -1,6 +1,3 @@
-#Snakmake Pipeline
-
-
 import os
 from os import path
 
