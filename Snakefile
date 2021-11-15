@@ -14,13 +14,6 @@ import re
 
 SAMPLES, = glob_wildcards("01_fastq_raw/{sam}_R1.fastq.gz")
 
-#NB_SAMPLES = len(SAMPLES)
-
-#message(str(NB_SAMPLES))
-
-#for sample in SAMPLES:
-#  message("Sample " + str(sample) + " will be processed")
-
 rule all:
     input:
         expand("00_fastqc/{sample}_R1_fastqc.zip", sample = SAMPLES),
