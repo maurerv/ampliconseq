@@ -22,8 +22,6 @@ rule all:
         expand("03_star/{sample}.Aligned.sortedByCoord.out.bam.stats", sample=SAMPLES),
         "multiqc_report.html"
 
-
-
 rule fastqc:
     message:
         "Fastqc statistics"
@@ -33,6 +31,13 @@ rule fastqc:
     output:
         fwd = "00_fastqc/{sample}_R1_fastqc.zip",
         rev = "00_fastqc/{sample}_R2_fastqc.zip",
+    conda:
+        "env.yml"
+    resources:
+        avg_mem  = lambda wildcards, attempt: 800 * attempt,
+        mem_mb   = lambda wildcards, attempt: 1000 * attempt,
+        walltime = lambda wildcards, attempt: 20 * attempt,
+        attempt  = lambda wildcards, attempt: attempt,
     shell:"""
         fastqc {input.fwd} {input.rev} -o 00_fastqc/
         """
@@ -46,6 +51,13 @@ rule trim:
     output:
         fwd = "02_fastq_trimmed/{sample}_R1_val_1.fq.gz",
         rev = "02_fastq_trimmed/{sample}_R2_val_2.fq.gz"
+    conda:
+        "env.yml"
+    resources:
+        avg_mem  = lambda wildcards, attempt: 1200 * attempt,
+        mem_mb   = lambda wildcards, attempt: 1300 * attempt,
+        walltime = lambda wildcards, attempt: 20 * attempt,
+        attempt  = lambda wildcards, attempt: attempt,
     shell:"""
         trim_galore --paired --nextera  {input.fwd} {input.rev} -o 02_fastq_trimmed/
         touch {output.fwd}
@@ -60,19 +72,26 @@ rule align:
         rev = "02_fastq_trimmed/{sample}_R2_val_2.fq.gz"
     output:
         "03_star/{sample}.Aligned.sortedByCoord.out.bam"
+    conda:
+        "env.yml"
     params:
         odir = config["workdir_top"] + "/03_star/" ,
         ref = config["STAR_reference"]
     threads : 4
+    resources:
+        avg_mem  = lambda wildcards, attempt: 30000 * attempt,
+        mem_mb   = lambda wildcards, attempt: 35000 * attempt,
+        walltime = lambda wildcards, attempt: 60 * attempt,
+        attempt  = lambda wildcards, attempt: attempt,
     shell:"""
         STAR --runThreadN {threads} --genomeDir {params.ref} \
          --readFilesCommand zcat \
-		 --outFileNamePrefix {params.odir}/{wildcards.sample}. \
-		 --outSAMtype BAM SortedByCoordinate \
+         --outFileNamePrefix {params.odir}/{wildcards.sample}. \
+         --outSAMtype BAM SortedByCoordinate \
          --outSAMunmapped Within \
          --outSAMattributes Standard \
-		 --readFilesIn {input.fwd} {input.rev}
-    	"""
+         --readFilesIn {input.fwd} {input.rev}
+        """
 
 rule index:
     message:
@@ -81,6 +100,13 @@ rule index:
         bam = "03_star/{sample}.Aligned.sortedByCoord.out.bam"
     output:
         "03_star/{sample}.Aligned.sortedByCoord.out.bam.bai"
+    conda:
+        "env.yml"
+    resources:
+        avg_mem  = lambda wildcards, attempt: 1200 * attempt,
+        mem_mb   = lambda wildcards, attempt: 1300 * attempt,
+        walltime = lambda wildcards, attempt: 20 * attempt,
+        attempt  = lambda wildcards, attempt: attempt,
     shell:"""
         samtools index {input.bam}
         """
@@ -92,18 +118,34 @@ rule stats:
         bam = "03_star/{sample}.Aligned.sortedByCoord.out.bam"
     output:
         "03_star/{sample}.Aligned.sortedByCoord.out.bam.stats"
+    conda:
+        "env.yml"
+    resources:
+        avg_mem  = lambda wildcards, attempt: 200 * attempt,
+        mem_mb   = lambda wildcards, attempt: 300 * attempt,
+        walltime = lambda wildcards, attempt: 20 * attempt,
+        attempt  = lambda wildcards, attempt: attempt,
     shell:"""
-		samtools stats {input.bam} > {output}
+        samtools stats {input.bam} > {output}
         """
 
 rule multiqc:
     message:
         "Summarizing using MultiQC"
     input:
-        "03_star/", "00_fastqc/"
+        expand(
+            '03_star/{sample}.Aligned.sortedByCoord.out.bam.stats',
+            sample=SAMPLES
+        )
     output:
         "multiqc_report.html"
+    conda:
+        "env.yml"
+    resources:
+        avg_mem  = lambda wildcards, attempt: 8000 * attempt,
+        mem_mb   = lambda wildcards, attempt: 8200 * attempt,
+        walltime = lambda wildcards, attempt: 60 * attempt,
+        attempt  = lambda wildcards, attempt: attempt,
     shell:"""
         multiqc 00_fastqc 02_fastq_trimmed 03_star
         """
-
