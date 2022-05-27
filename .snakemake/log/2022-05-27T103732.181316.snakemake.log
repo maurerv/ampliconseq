@@ -1,0 +1,10 @@
+OSError in line 5 of /Users/vale/src/pipelines/amplicon_seq/Snakefile:
+[Errno 30] Read-only file system: '/omics'
+  File "/Users/vale/src/pipelines/amplicon_seq/Snakefile", line 5, in <module>
+  File "/opt/homebrew/Cellar/python@3.10/3.10.4/Frameworks/Python.framework/Versions/3.10/lib/python3.10/os.py", line 215, in makedirs
+  File "/opt/homebrew/Cellar/python@3.10/3.10.4/Frameworks/Python.framework/Versions/3.10/lib/python3.10/os.py", line 215, in makedirs
+  File "/opt/homebrew/Cellar/python@3.10/3.10.4/Frameworks/Python.framework/Versions/3.10/lib/python3.10/os.py", line 215, in makedirs
+  File "/opt/homebrew/Cellar/python@3.10/3.10.4/Frameworks/Python.framework/Versions/3.10/lib/python3.10/os.py", line 215, in makedirs
+  File "/opt/homebrew/Cellar/python@3.10/3.10.4/Frameworks/Python.framework/Versions/3.10/lib/python3.10/os.py", line 215, in makedirs
+  File "/opt/homebrew/Cellar/python@3.10/3.10.4/Frameworks/Python.framework/Versions/3.10/lib/python3.10/os.py", line 215, in makedirs
+  File "/opt/homebrew/Cellar/python@3.10/3.10.4/Frameworks/Python.framework/Versions/3.10/lib/python3.10/os.py", line 225, in makedirs

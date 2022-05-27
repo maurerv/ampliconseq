@@ -1,19 +1,22 @@
-import os
-from os import path
+""" Snakemake pipeline for processing amplicon sequencing data
 
-configfile: "./config.yml"
-workdir: config["workdir_top"]
+    Copyright (C) 2022
+
+    Author: Valentin Maurer <valentin.maurer@stud.uni-heidelberg.de>
+"""
 
 import sys
+from os.path import join
+
+configfile : "./config.yml"
+workdir    : config["workdir_top"]
+
 
 def message(mes):
-  sys.stderr.write("|--- " + mes + "\n")
+  sys.stderr.write(f"|--- {mes}\n")
 
-import glob
-import re
 
 SAMPLES, = glob_wildcards("01_fastq_raw/{sam}_R1.fastq.gz")
-
 rule all:
     input:
         expand("00_fastqc/{sample}_R1_fastqc.zip", sample = SAMPLES),
@@ -44,13 +47,13 @@ rule fastqc:
 
 rule trim:
     message:
-        "Preprocessing of fastq files"
+        "Trimming fastq files"
     input:
         fwd = "01_fastq_raw/{sample}_R1.fastq.gz",
         rev = "01_fastq_raw/{sample}_R2.fastq.gz"
     output:
-        fwd = "02_fastq_trimmed/{sample}_R1_val_1.fq.gz",
-        rev = "02_fastq_trimmed/{sample}_R2_val_2.fq.gz"
+        fwd = "02_fastq_trimmed/{sample}_R1_val_1.fastq.gz",
+        rev = "02_fastq_trimmed/{sample}_R2_val_2.fastq.gz"
     conda:
         "env.yml"
     resources:
@@ -59,7 +62,9 @@ rule trim:
         walltime = lambda wildcards, attempt: 20 * attempt,
         attempt  = lambda wildcards, attempt: attempt,
     shell:"""
-        trim_galore --paired --nextera  {input.fwd} {input.rev} -o 02_fastq_trimmed/
+        trim_galore --paired \
+            --nextera  {input.fwd} {input.rev} \
+            -o 02_fastq_trimmed/
         touch {output.fwd}
         touch {output.rev}
         """
@@ -68,16 +73,16 @@ rule align:
     message:
         "Align trimmed fastq files"
     input:
-        fwd = "02_fastq_trimmed/{sample}_R1_val_1.fq.gz",
-        rev = "02_fastq_trimmed/{sample}_R2_val_2.fq.gz"
+        fwd = "02_fastq_trimmed/{sample}_R1_val_1.fastq.gz",
+        rev = "02_fastq_trimmed/{sample}_R2_val_2.fastq.gz"
     output:
         "03_star/{sample}.Aligned.sortedByCoord.out.bam"
     conda:
         "env.yml"
     params:
-        odir = config["workdir_top"] + "/03_star/" ,
-        ref = config["STAR_reference"]
-    threads : 4
+        odir = join(config["workdir_top"], "/03_star/") ,
+        ref  = config["STAR_reference"]
+    threads : config["threads"]
     resources:
         avg_mem  = lambda wildcards, attempt: 30000 * attempt,
         mem_mb   = lambda wildcards, attempt: 35000 * attempt,

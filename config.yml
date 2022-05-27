@@ -1,16 +1,7 @@
 ---
-## General pipeline parameters:
-
-# Name of the pipeline:
-#pipeline: "Amplicon Sequencing Pipeline"
-# ABSOLUTE path to directory holding the working directory:
+# Absolute path to working directory
 workdir_top: "/omics/groups/OE0219/internal/Valentin/JMML/amplicon/"
-# Repository URL:
-#repo: ""
-
-## Pipeline-specific parameters:
+# Run specific configurations
 threads: 4
-#Reference genome for alignment with bismark
-BWA_reference: "/omics/groups/OE0219/internal/Valentin/genomes/hg38_ensembl/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"
 STAR_reference: "/omics/groups/OE0219/internal/Valentin/genomes/hg38_ensembl/star/"
 
