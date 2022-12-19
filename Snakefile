@@ -34,6 +34,8 @@ rule fastqc:
     output:
         fwd = "00_fastqc/{sample}_R1_fastqc.zip",
         rev = "00_fastqc/{sample}_R2_fastqc.zip",
+    singularity:
+        "docker://pegi3s/fastqc"
     conda:
         "env.yml"
     resources:
@@ -105,6 +107,8 @@ rule index:
         bam = "03_star/{sample}.Aligned.sortedByCoord.out.bam"
     output:
         "03_star/{sample}.Aligned.sortedByCoord.out.bam.bai"
+    singularity:
+        "docker://staphb/samtools"
     conda:
         "env.yml"
     resources:
@@ -123,6 +127,8 @@ rule stats:
         bam = "03_star/{sample}.Aligned.sortedByCoord.out.bam"
     output:
         "03_star/{sample}.Aligned.sortedByCoord.out.bam.stats"
+    singularity:
+        "docker://staphb/samtools"
     conda:
         "env.yml"
     resources:
@@ -144,6 +150,8 @@ rule multiqc:
         )
     output:
         "multiqc_report.html"
+    singularity:
+        "docker://ewels/multiqc"
     conda:
         "env.yml"
     resources:

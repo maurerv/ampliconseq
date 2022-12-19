@@ -10,6 +10,7 @@ This pipeline uses the following tools to align paired end amplicon sequencing d
 4. [samtools](https://github.com/samtools/) for alignment statistics and indexing
 5. [MultiQC](https://multiqc.info/) to compile everything into a neat report
 
+
 ## Configuration
 
 All necessary tools can be installed using conda and the provided environment file as per:
@@ -26,9 +27,11 @@ is the absolute path to the working directory and STAR_reference specifies the a
 created by the STAR aligner as per the [manual](https://physiology.med.cornell.edu/faculty/skrabanek/lab/angsd/lecture_notes/STARmanual.pdf).
 
 The working directory needs to contain a folder named 00_fastqc which contains either the fastq files or symbolic links
-to them. Only files with suffix "fastq.gz" will be recognized by the pipeline.
+to them. Only files with suffix "\_R\[0-9\].fastq.gz" will be recognized by the pipeline.
+
 
 ## Result
+
 After running the pipeline, the working directory will have the following structure
 ```
 workdir_top
