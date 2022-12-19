@@ -27,7 +27,7 @@ is the absolute path to the working directory and STAR_reference specifies the a
 created by the STAR aligner as per the [manual](https://physiology.med.cornell.edu/faculty/skrabanek/lab/angsd/lecture_notes/STARmanual.pdf).
 
 The working directory needs to contain a folder named 00_fastqc which contains either the fastq files or symbolic links
-to them. Only files with suffix "\_R\[0-9\].fastq.gz" will be recognized by the pipeline.
+to them. Only files with suffix "\_R\[1-2\].fastq.gz" will be recognized by the pipeline.
 
 
 ## Result

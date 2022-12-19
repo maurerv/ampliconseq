@@ -2,7 +2,7 @@
 
     Copyright (C) 2022
 
-    Author: Valentin Maurer <valentin.maurer@stud.uni-heidelberg.de>
+    Author: Valentin Maurer <valentin.maurer@embl-hamburg.de>
 """
 
 import sys
